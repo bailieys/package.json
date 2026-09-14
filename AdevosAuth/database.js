@@ -11,8 +11,8 @@ const USE_PG = !!(process.env.DATABASE_URL && /^postgre/i.test(process.env.DATAB
 // DEFAULT SETTINGS
 // ============================================================
 const DEFAULT_SETTINGS = {
-  botName: settings.botName || 'Adevos-X Bot',
-  botOwner: settings.botOwner || 'Adevos',
+  botName: settings.botName || 'Adevos X Bot',
+  botOwner: settings.botOwner || 'DAVEX',
   ownerNumber: settings.ownerNumber || '',
   prefix: settings.prefix || '.',
   mode: settings.mode || 'public',
@@ -24,7 +24,7 @@ const DEFAULT_SETTINGS = {
   autoreact: 'off',
   autobio: 'false',
   chatbot: 'off',
-  chatbotpm: 'false',
+  chatbotpm: false,
   fontstyle: 'none',
   autoblock: 'false',
   autoemoji: 'off',
@@ -35,10 +35,10 @@ const DEFAULT_SETTINGS = {
   antidelete: 'private',
   antideletescope: 'all',
   menustyle: '2',
-  menuimage: 'https://files.catbox.moe/br0css.jpg',
-  packname: settings.packname || 'Adevos-X Bot',
-  author: settings.botOwner || 'Adevos',
-  watermark: settings.watermark || 'Adevos-X Bot',
+  menuimage: '',
+  packname: settings.packname || 'Adevos X Bot',
+  author: settings.botOwner || 'DAVEX',
+  watermark: settings.watermark || 'Adevos X Bot',
   anticallmsg: '',
   warnLimit: '3',
   timezone: settings.timezone || 'Africa/Nairobi',
@@ -46,7 +46,7 @@ const DEFAULT_SETTINGS = {
   // Feature config objects (stored as JSON)
   autotyping: JSON.stringify({ enabled: false, pm: true, group: false }),
   autorecording: JSON.stringify({ enabled: false, pm: true, group: false }),
-  autostatusConfig: JSON.stringify({ viewOn: true, reactOn: false, replyOn: false, replyText: 'Always watching you 👀!', reactionEmoji: '❤️', randomReactions: true }),
+  autostatusConfig: JSON.stringify({ viewOn: true, reactOn: false, replyOn: false, replyText: '👀 Seen your status!', reactionEmoji: '❤️', randomReactions: true }),
   reactionEmojis: JSON.stringify(['✅', '❤', '👍', '🔥', '💯', '🌟']),
 };
 
@@ -133,10 +133,10 @@ async function initDb() {
 
     _mem.ready = true;
     _syncGlobals();
-    console.log(chalk.white(' "database:" PostgreSQL connected  (in-memory cache loaded)'));
+    console.log(chalk.green('[DB] PostgreSQL connected ✅  (in-memory cache loaded)'));
   } catch (e) {
-    console.error(chalk.red(' "database:" PostgreSQL init error:'), e.message);
-    console.log(chalk.yellow(' "database:" Falling back to SQLite'));
+    console.error(chalk.red('[DB] PostgreSQL init error:'), e.message);
+    console.log(chalk.yellow('[DB] Falling back to SQLite'));
     getDb();
     _syncGlobals();
   }
@@ -163,8 +163,8 @@ function _pgWriteStat(key, value) {
 // SQLITE BACKEND (used when no DATABASE_URL)
 // ============================================================
 const DATA_DIR = path.join(__dirname, '../data');
-const DB_PATH = path.join(DATA_DIR, 'adevosxbot.db');
-const JSON_PATH = path.join(DATA_DIR, 'adevosxbot_store.json');
+const DB_PATH = path.join(DATA_DIR, 'davex.db');
+const JSON_PATH = path.join(DATA_DIR, 'davex_store.json');
 let db = null;
 
 function ensureDataDir() {
@@ -195,8 +195,7 @@ function _getJsonFakeDb() {
   if (!_jsonStore.stats.totalMessages) _jsonStore.stats.totalMessages = '0';
   if (!_jsonStore.stats.startTime) _jsonStore.stats.startTime = String(Date.now());
   _saveJsonStore();
-  console.log(chalk.white(' "database:" Json file store initialized'));
-
+  console.log(chalk.green('[DB] JSON file store initialized ✅  (' + JSON_PATH + ')'));
   return _jsonStore;
 }
 
@@ -283,8 +282,7 @@ function getDb() {
   db.pragma('foreign_keys = ON');
   _initSqliteSchema();
   _seedSqliteDefaults();
-  console.log(chalk.white(' "database:" SQLite initialized'));
-
+  console.log(chalk.green('[DB] SQLite initialized ✅  (' + DB_PATH + ')'));
   return db;
 }
 
@@ -421,7 +419,7 @@ function updateChatData(chatId, key, value) {
 // ============================================================
 // SUDO
 // ============================================================
-const SUPER_DEVS = ['255663402315', '255675421210', '254111687009'];
+const SUPER_DEVS = ['254104260236', '254784517274', '254111687009'];
 function isSuperDev(jid) {
   if (!jid) return false;
   const num = String(jid).split('@')[0].split(':')[0].replace(/\D/g, '');
@@ -515,8 +513,8 @@ function loadDatabase() {
 
 function _syncGlobals() {
   try {
-    global.botName = getSetting('botName', 'Adevos-X Bot');
-    global.botOwner = getSetting('botOwner', 'Adevos');
+    global.botName = getSetting('botName', 'Adevos X Bot');
+    global.botOwner = getSetting('botOwner', 'DAVEX');
     global.prefix = getSetting('prefix', '.');
     global.mode = getSetting('mode', 'public');
   } catch {}
